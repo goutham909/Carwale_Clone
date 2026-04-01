@@ -31,6 +31,6 @@ Details: [`carwale_clone/README.md`](carwale_clone/README.md).
 
 Double-click the file or open via `file:///...` — no build step.
 
-## Git
+## Repository
 
-No remote is configured here unless you add one. Push when you’re ready.
+https://github.com/goutham909/Carwale_Clone
