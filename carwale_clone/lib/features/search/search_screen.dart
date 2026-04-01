@@ -7,7 +7,9 @@ import '../../data/models/catalog_models.dart';
 import '../../providers/providers.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
-  const SearchScreen({super.key});
+  const SearchScreen({super.key, this.initialQuery});
+
+  final String? initialQuery;
 
   @override
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
@@ -15,6 +17,25 @@ class SearchScreen extends ConsumerStatefulWidget {
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final q = widget.initialQuery;
+    if (q != null && q.isNotEmpty) {
+      _controller.text = q;
+    }
+  }
+
+  @override
+  void didUpdateWidget(SearchScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final q = widget.initialQuery;
+    if (q != null && q.isNotEmpty && q != oldWidget.initialQuery) {
+      _controller.text = q;
+      setState(() {});
+    }
+  }
 
   @override
   void dispose() {
@@ -235,7 +256,25 @@ class _EmptySearchBody extends StatelessWidget {
           ),
         ),
         ...catalog.trending.map(
-          (t) => _SearchListTile(icon: Icons.trending_up, title: t, onTap: () {}),
+          (t) => _SearchListTile(
+            icon: Icons.trending_up,
+            title: t,
+            onTap: () {
+              final tl = t.toLowerCase();
+              Car? hit;
+              for (final c in catalog.cars) {
+                if (tl.contains(c.name.toLowerCase()) || c.fullName.toLowerCase().contains(tl)) {
+                  hit = c;
+                  break;
+                }
+              }
+              if (hit != null) {
+                context.pushNamed('car', pathParameters: {'id': hit.id});
+              } else {
+                context.pushNamed('search', queryParameters: {'q': t});
+              }
+            },
+          ),
         ),
       ],
     );
@@ -292,7 +331,7 @@ class _ResultsBody extends StatelessWidget {
             return _SearchListTile(
               icon: Icons.search,
               title: r.compareLabel!,
-              onTap: () {},
+              onTap: () => context.pushNamed('compare-result', queryParameters: {'left': 'landcruiser', 'right': 'creta'}),
             );
           }
           final c = r.car!;

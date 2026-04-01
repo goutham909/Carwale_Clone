@@ -23,7 +23,7 @@ class NewHomeScreen extends ConsumerWidget {
         body: SafeArea(
           child: CustomScrollView(
             slivers: [
-              SliverToBoxAdapter(child: _CwHeader(showHeart: true)),
+              SliverToBoxAdapter(child: _CwHeader()),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(14, 4, 14, 12),
@@ -70,17 +70,29 @@ class NewHomeScreen extends ConsumerWidget {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 14),
-                    children: const [
-                      _FilterChip(label: 'Budget', icon: Icons.sell_outlined),
-                      SizedBox(width: 10),
-                      _FilterChip(label: 'Body Type', icon: Icons.directions_car_outlined),
-                      SizedBox(width: 10),
-                      _FilterChip(label: 'Fuel Type', icon: Icons.local_gas_station_outlined),
+                    children: [
+                      _FilterChip(
+                        label: 'Budget',
+                        icon: Icons.sell_outlined,
+                        onTap: () => context.pushNamed('filter-new', queryParameters: {'type': 'budget'}),
+                      ),
+                      const SizedBox(width: 10),
+                      _FilterChip(
+                        label: 'Body Type',
+                        icon: Icons.directions_car_outlined,
+                        onTap: () => context.pushNamed('filter-new', queryParameters: {'type': 'body'}),
+                      ),
+                      const SizedBox(width: 10),
+                      _FilterChip(
+                        label: 'Fuel Type',
+                        icon: Icons.local_gas_station_outlined,
+                        onTap: () => context.pushNamed('filter-new', queryParameters: {'type': 'fuel'}),
+                      ),
                     ],
                   ),
                 ),
               ),
-              const SliverToBoxAdapter(child: _PromoBanner()),
+              SliverToBoxAdapter(child: _PromoBanner()),
               const SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(14, 8, 14, 12),
@@ -115,23 +127,33 @@ class NewHomeScreen extends ConsumerWidget {
   }
 }
 
-class _CwHeader extends StatelessWidget {
-  const _CwHeader({required this.showHeart});
-
-  final bool showHeart;
+class _CwHeader extends ConsumerWidget {
+  const _CwHeader();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final city = ref.watch(selectedCityProvider);
     return Padding(
       padding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
       child: Row(
         children: [
-          IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-          const Expanded(child: Center(child: CwLogoMark())),
+          IconButton(icon: const Icon(Icons.menu), onPressed: () => context.pushNamed('more')),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CwLogoMark(),
+                Text(city, style: const TextStyle(fontSize: 10, color: kCwMuted)),
+              ],
+            ),
+          ),
           Stack(
             clipBehavior: Clip.none,
             children: [
-              IconButton(icon: const Icon(Icons.location_on_outlined), onPressed: () {}),
+              IconButton(
+                icon: const Icon(Icons.location_on_outlined),
+                onPressed: () => context.pushNamed('city-picker'),
+              ),
               Positioned(
                 right: 10,
                 top: 10,
@@ -143,7 +165,10 @@ class _CwHeader extends StatelessWidget {
               ),
             ],
           ),
-          if (showHeart) IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.favorite_border),
+            onPressed: () => context.pushNamed('saved-cars'),
+          ),
         ],
       ),
     );
@@ -151,27 +176,35 @@ class _CwHeader extends StatelessWidget {
 }
 
 class _FilterChip extends StatelessWidget {
-  const _FilterChip({required this.label, required this.icon});
+  const _FilterChip({required this.label, required this.icon, required this.onTap});
 
   final String label;
   final IconData icon;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: kCwCard,
+    return Material(
+      color: kCwCard,
+      borderRadius: BorderRadius.circular(10),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: kCwBorder),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 18, color: kCwTeal),
-          const SizedBox(width: 8),
-          Text(label, style: const TextStyle(fontSize: 13, color: Colors.white)),
-        ],
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: kCwBorder),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 18, color: kCwTeal),
+              const SizedBox(width: 8),
+              Text(label, style: const TextStyle(fontSize: 13, color: Colors.white)),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -291,7 +324,7 @@ class _PromoBanner extends StatelessWidget {
                         color: kCwCoralCta,
                         borderRadius: BorderRadius.circular(8),
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () => context.pushNamed('offers', pathParameters: {'carId': 'fronx'}),
                           borderRadius: BorderRadius.circular(8),
                           child: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),

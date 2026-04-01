@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/constants.dart';
 import '../../data/models/catalog_models.dart';
@@ -35,11 +36,11 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
           key: const Key('screen_news'),
           backgroundColor: kCwBg,
           appBar: AppBar(
-            leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
+            leading: IconButton(icon: const Icon(Icons.menu), onPressed: () => context.pushNamed('more')),
             title: const Text('News', style: TextStyle(fontWeight: FontWeight.w700)),
             actions: [
-              IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-              IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
+              IconButton(icon: const Icon(Icons.search), onPressed: () => context.pushNamed('search')),
+              IconButton(icon: const Icon(Icons.favorite_border), onPressed: () => context.pushNamed('saved-cars')),
             ],
           ),
           body: Column(
@@ -79,20 +80,14 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
                 ),
               Expanded(
                 child: _topTab == 1
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Text(
-                            'Images & Videos (demo).\n\nSwitch to NEWS & REVIEWS for articles.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white.withValues(alpha: 0.55), height: 1.5),
-                          ),
-                        ),
-                      )
+                    ? _MediaVideoGrid()
                     : ListView.builder(
                         padding: const EdgeInsets.only(bottom: 16),
                         itemCount: articles.length,
-                        itemBuilder: (context, i) => _NewsCard(article: articles[i]),
+                        itemBuilder: (context, i) => InkWell(
+                          onTap: () => context.pushNamed('news-detail', pathParameters: {'articleId': articles[i].id}),
+                          child: _NewsCard(article: articles[i]),
+                        ),
                       ),
               ),
             ],
@@ -157,6 +152,75 @@ class _Chip extends StatelessWidget {
   }
 }
 
+class _MediaVideoGrid extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    const thumbs = [
+      'https://images.unsplash.com/photo-1619405399517-d7fce0f13340?w=400',
+      'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=400',
+      'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400',
+      'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=400',
+      'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400',
+      'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=400',
+    ];
+    return GridView.builder(
+      padding: const EdgeInsets.all(14),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 1.1,
+      ),
+      itemCount: thumbs.length,
+      itemBuilder: (context, i) {
+        return Material(
+          color: kCwCard,
+          borderRadius: BorderRadius.circular(10),
+          child: InkWell(
+            onTap: () {
+              showDialog<void>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  backgroundColor: kCwCard,
+                  title: const Text('Video review'),
+                  content: const Text('Playback would stream here (demo).'),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+                  ],
+                ),
+              );
+            },
+            borderRadius: BorderRadius.circular(10),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(thumbs[i], fit: BoxFit.cover),
+                ),
+                const Center(child: Icon(Icons.play_circle_fill, size: 48, color: Colors.white70)),
+                Positioned(
+                  left: 8,
+                  bottom: 8,
+                  right: 8,
+                  child: Text(
+                    'Video ${i + 1}',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      shadows: [Shadow(blurRadius: 6, color: Colors.black)],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 class _NewsCard extends StatelessWidget {
   const _NewsCard({required this.article});
 
@@ -206,10 +270,14 @@ class _NewsCard extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 18,
                     backgroundColor: Colors.black45,
-                    child: IconButton(
+                    child:                     IconButton(
                       padding: EdgeInsets.zero,
                       icon: const Icon(Icons.favorite_border, size: 18),
-                      onPressed: () {},
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Saved to reading list (demo).')),
+                        );
+                      },
                     ),
                   ),
                 ),

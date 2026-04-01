@@ -4,6 +4,8 @@ import '../data/models/catalog_models.dart';
 import '../data/repositories/catalog_repository.dart';
 import '../data/sources/mock_catalog_source.dart';
 
+export 'user_prefs_providers.dart';
+
 final mockCatalogSourceProvider = Provider<MockCatalogSource>((ref) {
   return MockCatalogSource();
 });

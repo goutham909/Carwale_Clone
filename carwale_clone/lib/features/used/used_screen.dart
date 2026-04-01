@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/constants.dart';
 import '../../providers/providers.dart';
@@ -19,6 +20,7 @@ class _UsedScreenState extends ConsumerState<UsedScreen> {
   @override
   Widget build(BuildContext context) {
     final async = ref.watch(catalogProvider);
+    final city = ref.watch(selectedCityProvider);
 
     return async.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator(color: kCwTeal))),
@@ -35,12 +37,23 @@ class _UsedScreenState extends ConsumerState<UsedScreen> {
                   padding: const EdgeInsets.fromLTRB(4, 8, 8, 0),
                     child: Row(
                     children: [
-                      IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-                      const Expanded(child: Center(child: CwLogoMark(fontSize: 16))),
+                      IconButton(icon: const Icon(Icons.menu), onPressed: () => context.pushNamed('more')),
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const CwLogoMark(fontSize: 16),
+                            Text(city, style: const TextStyle(fontSize: 9, color: kCwMuted)),
+                          ],
+                        ),
+                      ),
                       Stack(
                         clipBehavior: Clip.none,
                         children: [
-                          IconButton(icon: const Icon(Icons.location_on_outlined), onPressed: () {}),
+                          IconButton(
+                            icon: const Icon(Icons.location_on_outlined),
+                            onPressed: () => context.pushNamed('city-picker'),
+                          ),
                           Positioned(
                             right: 10,
                             top: 10,
@@ -132,7 +145,7 @@ class _UsedScreenState extends ConsumerState<UsedScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),
-                        onPressed: () {},
+                        onPressed: () => context.pushNamed('used-listings'),
                         child: const Text('Find Used Car', style: TextStyle(fontWeight: FontWeight.w800)),
                       ),
                     ],
@@ -157,27 +170,34 @@ class _UsedScreenState extends ConsumerState<UsedScreen> {
                     final c = catalog.cities[i];
                     return Padding(
                       padding: const EdgeInsets.only(right: 12),
-                      child: Container(
-                        width: 88,
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-                        decoration: BoxDecoration(
-                          color: kCwCard,
+                      child: Material(
+                        color: kCwCard,
+                        borderRadius: BorderRadius.circular(10),
+                        child: InkWell(
+                          onTap: () => context.pushNamed('used-listings', queryParameters: {'city': c}),
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: kCwBorder),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.account_balance_outlined, color: kCwTeal.withValues(alpha: 0.95), size: 32),
-                            const SizedBox(height: 6),
-                            Text(
-                              c,
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Colors.white70),
+                          child: Container(
+                            width: 88,
+                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: kCwBorder),
                             ),
-                          ],
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.account_balance_outlined, color: kCwTeal.withValues(alpha: 0.95), size: 32),
+                                const SizedBox(height: 6),
+                                Text(
+                                  c,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Colors.white70),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     );
