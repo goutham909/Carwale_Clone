@@ -7,7 +7,7 @@ Two ways to run this project(Flutter + iPhone iframe preview).
 Folder: **[`carwale_clone/`](carwale_clone/)**
 
 - **Riverpod** + **go_router** + **StatefulShellRoute** (5 tabs: New, Used, Compare, News, Alerts)
-- **`web/iphone_preview.html`** — device frame loads the built **`index.html`** in an iframe (same pattern as Blink)
+- **`web/iphone_preview.html`** — device frame loads the built **`index.html`** in an iframe 
 - Mock data: **`assets/mock/catalog.json`**
 - Build script: **`build_web_preview.ps1`**
 
