@@ -1,6 +1,6 @@
 # CarWale clone
 
-Two ways to run this project — same idea as your **Blink Clone** (Flutter + iPhone iframe preview).
+Two ways to run this project(Flutter + iPhone iframe preview).
 
 ## 1. Flutter app 
 
