@@ -2,7 +2,7 @@
 
 Two ways to run this project — same idea as your **Blink Clone** (Flutter + iPhone iframe preview).
 
-## 1. Flutter app (like Blink Clone)
+## 1. Flutter app 
 
 Folder: **[`carwale_clone/`](carwale_clone/)**
 
@@ -18,7 +18,7 @@ cd build\web
 python -m http.server 8081
 ```
 
-Then open **http://127.0.0.1:8081/iphone_preview.html** (8081 avoids clashing with Blink on 8080).
+Then open **http://127.0.0.1:8081/iphone_preview.html** 
 
 You need the [Flutter SDK](https://docs.flutter.dev/get-started/install) on your PATH.
 
