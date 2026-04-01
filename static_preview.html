@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CarWale Clone – iPhone Preview</title>
+  <style>
+    :root {
+      --bg: #121212;
+      --bg-elevated: #1a1a1a;
+      --bg-card: #1e1e1e;
+      --text: #fff;
+      --text-muted: #9e9e9e;
+      --teal: #4db6ac;
+      --teal-dark: #3d948c;
+      --coral: #e84e4e;
+      --coral-alt: #f05049;
+      --border: #333;
+      --blue-link: #64b5f6;
+      --vs-orange: #ff9800;
+      --safe-bottom: 34px;
+      --nav-h: 56px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(145deg, #2a2a2e 0%, #0d0d0f 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: var(--text);
+    }
+    .preview-title {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 13px;
+      color: #888;
+      letter-spacing: 0.05em;
+    }
+    /* iPhone frame */
+    .iphone-wrap {
+      position: relative;
+      filter: drop-shadow(0 24px 48px rgba(0,0,0,.45));
+    }
+    .iphone-bezel {
+      width: 402px;
+      max-width: calc(100vw - 32px);
+      background: linear-gradient(160deg, #3a3a3c 0%, #1c1c1e 40%, #0a0a0b 100%);
+      border-radius: 52px;
+      padding: 12px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .iphone-screen {
+      position: relative;
+      width: 100%;
+      height: min(844px, calc(100vh - 120px));
+      min-height: 640px;
+      background: var(--bg);
+      border-radius: 42px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .dynamic-island {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 34px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.4);
+    }
+    .status-bar {
+      flex-shrink: 0;
+      height: 54px;
+      padding: 12px 28px 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      position: relative;
+      z-index: 50;
+    }
+    .status-icons { display: flex; gap: 5px; align-items: center; font-size: 13px; }
+    .home-indicator {
+      flex-shrink: 0;
+      height: 21px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+    .home-indicator::after {
+      content: "";
+      width: 134px;
+      height: 5px;
+      background: rgba(255,255,255,.35);
+      border-radius: 3px;
+    }
+    .app-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      position: relative;
+    }
+    .tab-view {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .tab-view.active { display: flex; }
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .scroll-area.with-bottom-nav { padding-bottom: calc(var(--nav-h) + 8px); }
+    .icon-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: background .15s;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,.08); }
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 14px 10px;
+      flex-shrink: 0;
+    }
+    .app-header.center-title .header-title { flex: 1; text-align: center; font-weight: 700; font-size: 17px; }
+    .logo-text {
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .logo-icon {
+      width: 28px;
+      height: 18px;
+      border: 2px solid var(--text);
+      border-radius: 4px 4px 2px 2px;
+      position: relative;
+    }
+    .logo-icon::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-top: 2px solid var(--teal);
+      border-radius: 2px;
+    }
+    .header-actions { display: flex; align-items: center; gap: 2px; }
+    .dot-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      background: var(--coral);
+      border-radius: 50%;
+    }
+    .rel { position: relative; }
+    .search-pill {
+      margin: 0 14px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-size: 15px;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .search-pill:hover { border-color: #555; }
+    .section-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 0 14px 10px;
+    }
+    .filter-row {
+      display: flex;
+      gap: 10px;
+      padding: 0 14px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .filter-pill {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .filter-pill svg { color: var(--teal); }
+    .promo-banner {
+      margin: 0 14px 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      min-height: 200px;
+      background: #0d0d0d;
+    }
+    .promo-banner img { width: 100%; height: 220px; object-fit: cover; display: block; opacity: .95; }
+    .promo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 55%);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .promo-title { font-size: 18px; font-weight: 800; line-height: 1.15; max-width: 70%; }
+    .promo-tag {
+      display: inline-block;
+      margin-top: 8px;
+      background: var(--coral);
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 4px;
+    }
+    .promo-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 12px;
+      gap: 10px;
+    }
+    .promo-small { font-size: 10px; color: #ccc; max-width: 60%; line-height: 1.35; }
+    .btn-coral {
+      background: var(--coral);
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 11px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: filter .15s;
+    }
+    .btn-coral:hover { filter: brightness(1.08); }
+    .h-scroll {
+      display: flex;
+      gap: 12px;
+      padding: 0 14px 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .h-scroll::-webkit-scrollbar { display: none; }
+    .car-card-mini {
+      flex-shrink: 0;
+      width: 140px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: transform .15s;
+    }
+    .car-card-mini:hover { transform: scale(1.02); }
+    .car-card-mini .img-wrap {
+      height: 88px;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .car-card-mini img { max-width: 100%; max-height: 80px; object-fit: contain; }
+    .car-card-mini .meta { padding: 10px 10px 12px; }
+    .car-card-mini .brand { font-size: 11px; color: var(--text-muted); }
+    .car-card-mini .model { font-size: 15px; font-weight: 700; }
+    /* Bottom nav */
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: var(--nav-h);
+      background: rgba(18,18,18,.94);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding-top: 6px;
+      z-index: 40;
+    }
+    .bottom-nav.hidden { display: none; }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 10px;
+      padding: 4px;
+      transition: color .15s;
+    }
+    .nav-item svg { width: 22px; height: 22px; }
+    .nav-item.active { color: var(--teal); }
+    .nav-item.active .nav-icon-wrap {
+      background: rgba(77,182,172,.2);
+      border-radius: 50%;
+      padding: 6px;
+    }
+    .nav-icon-wrap { padding: 6px; display: flex; }
+    .nav-dot {
+      position: relative;
+    }
+    .nav-dot::after {
+      content: "";
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 7px;
+      height: 7px;
+      background: var(--coral);
+      border-radius: 50%;
+    }
+    .overlay-full {
+      position: absolute;
+      inset: 0;
+      background: var(--bg);
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .22s ease, visibility .22s;
+    }
+    .overlay-full.visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .overlay-full .scroll-area { padding-bottom: calc(var(--safe-bottom) + 8px); }
+    .search-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px 12px;
+      flex-shrink: 0;
+    }
+    .search-input-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--teal);
+      border-radius: 10px;
+      padding: 0 12px;
+      min-height: 44px;
+    }
+    .search-input-wrap input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+      padding: 10px 8px;
+    }
+    .list-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background .12s;
+    }
+    .list-row:hover { background: rgba(255,255,255,.04); }
+    .list-row .main { flex: 1; font-size: 15px; }
+    .badge { font-size: 12px; color: var(--text-muted); }
+    .badge.teal { color: var(--teal); }
+    .subheading { font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 8px 16px 4px; }
+    .rec-card {
+      flex-shrink: 0;
+      width: 160px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .rec-card .ph { height: 100px; background: #2a2a2a; display: flex; align-items: center; justify-content: center; }
+    .rec-card img { max-height: 90px; max-width: 95%; object-fit: contain; }
+    .rec-card .txt { padding: 10px; }
+    .rec-card .name { font-size: 13px; margin-bottom: 6px; }
+    .rec-card .price { font-size: 14px; font-weight: 800; }
+    .disclaimer { font-size: 11px; color: var(--text-muted); padding: 8px 16px 16px; line-height: 1.4; }
+    .hero-used {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+    .used-panel {
+      margin: -16px 14px 0;
+      position: relative;
+      z-index: 2;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 16px 16px 0 0;
+      padding: 20px 16px;
+    }
+    .used-title { text-align: center; font-size: 14px; font-weight: 800; letter-spacing: 0.04em; margin-bottom: 18px; }
+    .budget-label { font-size: 14px; margin-bottom: 12px; }
+    .dual-slider-wrap { margin-bottom: 8px; }
+    .dual-slider-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+    .range-pair { position: relative; height: 28px; margin: 8px 0; }
+    .range-pair input[type=range] {
+      position: absolute;
+      left: 0; right: 0;
+      width: 100%;
+      height: 28px;
+      background: transparent;
+      pointer-events: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .range-pair input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 3px solid #1a3d3a;
+      cursor: pointer;
+      pointer-events: auto;
+      margin-top: -9px;
+    }
+    .range-pair input[type=range]::-webkit-slider-runnable-track {
+      height: 4px;
+      background: transparent;
+    }
+    .range-track {
+      position: absolute;
+      left: 0; right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+    }
+    .range-fill {
+      position: absolute;
+      height: 4px;
+      background: var(--teal);
+      border-radius: 2px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .lakh-inputs { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+    .lakh-inputs input {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .btn-full-coral {
+      width: 100%;
+      margin-top: 18px;
+      padding: 14px;
+      background: var(--coral-alt);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .city-scroll { display: flex; gap: 12px; padding: 12px 14px 24px; overflow-x: auto; }
+    .city-card {
+      flex-shrink: 0;
+      width: 88px;
+      height: 88px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      color: var(--teal);
+    }
+    .compare-select {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin: 16px 14px;
+      position: relative;
+    }
+    .compare-box {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px 12px;
+      text-align: center;
+      background: var(--bg-elevated);
+    }
+    .compare-box .select-link { color: var(--blue-link); font-size: 14px; margin-top: 10px; display: block; cursor: pointer; }
+    .vs-badge {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 36px;
+      height: 36px;
+      background: var(--vs-orange);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid var(--bg);
+      z-index: 2;
+    }
+    .compare-actions { display: flex; gap: 10px; padding: 0 14px 20px; }
+    .btn-outline { flex: 1; padding: 12px; border: 1px solid var(--text); background: transparent; color: var(--text); border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .section-title-compare { text-align: center; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; margin: 8px 0 4px; }
+    .section-title-compare::after { content: ""; display: block; width: 40px; height: 3px; background: var(--teal); margin: 8px auto 0; border-radius: 2px; }
+    .pop-compare-card {
+      margin: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg-elevated);
+    }
+    .pop-compare-inner { display: flex; align-items: center; position: relative; min-height: 120px; }
+    .pop-half { flex: 1; padding: 12px; text-align: center; }
+    .pop-half img { height: 56px; object-fit: contain; max-width: 100%; }
+    .pop-half .nm { font-size: 13px; font-weight: 700; margin-top: 8px; }
+    .pop-half .pr { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    .news-tabs { display: flex; border-bottom: 1px solid var(--border); margin: 0 14px; }
+    .news-tab {
+      flex: 1;
+      text-align: center;
+      padding: 14px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      color: var(--text-muted);
+    }
+    .news-tab.active { color: var(--teal); }
+    .news-tab.active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 12px;
+      right: 12px;
+      height: 3px;
+      background: var(--teal);
+      border-radius: 2px 2px 0 0;
+    }
+    .chip-row { display: flex; gap: 10px; padding: 14px; overflow-x: auto; }
+    .chip {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--text);
+      font-size: 13px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .chip.active { border-color: var(--teal); color: var(--teal); }
+    .news-card { margin: 0 14px 16px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-card); }
+    .news-card .img-box { position: relative; height: 180px; background: #222; }
+    .news-card .img-box img { width: 100%; height: 100%; object-fit: cover; }
+    .news-badge { position: absolute; top: 10px; left: 10px; background: #1976d2; color: #fff; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 4px; }
+    .news-heart { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,.45); border-radius: 50%; padding: 8px; border: none; color: #fff; cursor: pointer; }
+    .news-card h3 { padding: 14px 14px 8px; font-size: 16px; line-height: 1.35; }
+    .news-meta { display: flex; justify-content: space-between; padding: 0 14px; font-size: 12px; color: var(--text-muted); }
+    .news-views { padding: 12px 14px 14px; font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; border-top: 1px solid var(--border); margin-top: 10px; }
+    .notif-row { display: flex; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
+    .notif-row:hover { background: rgba(255,255,255,.03); }
+    .notif-row img { width: 100px; height: 56px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+    .notif-row .tx { flex: 1; min-width: 0; }
+    .notif-row .tx .t { font-size: 14px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .notif-row .tx .tm { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+    .link-clear { background: none; border: none; color: var(--teal); font-size: 14px; cursor: pointer; font-weight: 600; }
+    .detail-tabs { display: flex; gap: 0; padding: 0 8px; overflow-x: auto; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .detail-tab {
+      flex-shrink: 0;
+      padding: 12px 14px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+    }
+    .detail-tab.active { color: var(--text); }
+    .detail-tab.active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 8px;
+      right: 8px;
+      height: 2px;
+      background: var(--teal);
+    }
+    .carousel-wrap { position: relative; background: #0a0a0a; }
+    .carousel-wrap img { width: 100%; height: 220px; object-fit: contain; display: block; }
+    .car-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .car-nav.prev { left: 8px; }
+    .car-nav.next { right: 8px; }
+    .media-row { display: flex; justify-content: space-around; padding: 14px; border-bottom: 1px solid var(--border); font-size: 11px; color: var(--text-muted); }
+    .media-row button { background: none; border: none; color: inherit; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
+    .detail-body { padding: 16px 14px 100px; }
+    .detail-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+    .stars { color: var(--teal); letter-spacing: 2px; font-size: 14px; }
+    .review-links { font-size: 13px; margin-top: 8px; }
+    .review-links a { color: var(--teal); text-decoration: none; }
+    .selector-grid { display: flex; border: 1px solid var(--border); border-radius: 10px; margin-top: 16px; overflow: hidden; }
+    .selector-grid > div { flex: 1; padding: 12px; }
+    .selector-grid > div:first-child { border-right: 1px solid var(--border); }
+    .selector-grid .lbl { font-size: 11px; color: var(--text-muted); }
+    .selector-grid .val { font-size: 13px; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .price-big { font-size: 26px; font-weight: 800; margin-top: 20px; }
+    .price-sub { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+    .emi-box { border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .emi-box .emi-amt { font-size: 15px; font-weight: 700; flex: 1; min-width: 140px; }
+    .emi-box .btn-emi { border: 1px solid var(--teal); color: var(--teal); background: transparent; padding: 10px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .detail-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0));
+      background: linear-gradient(to top, var(--bg) 80%, transparent);
+      z-index: 5;
+    }
+    .fade-in { animation: fadeIn .2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  </style>
+</head>
+<body>
+  <p class="preview-title">CarWale Clone · iPhone Web Preview</p>
+  <div class="iphone-wrap">
+    <div class="iphone-bezel">
+      <div class="iphone-screen">
+        <div class="dynamic-island" aria-hidden="true"></div>
+        <div class="status-bar">
+          <span id="clock">9:41</span>
+          <div class="status-icons">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><path d="M1 4h2v6H1V4zm4-2h2v8H5V2zm4 3h2v5H9V5zm4-4h2v9h-2V1z"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2C4.5 2 1.7 4.2 1 7h14c-.7-2.8-3.5-5-7-5zm0 8c2.4 0 4.5-1.2 5.7-3H2.3C3.5 8.8 5.6 10 8 10z"/></svg>
+            <span style="font-weight:700">100%</span>
+          </div>
+        </div>
+        <div class="app-main" id="appMain">
+          <div id="tabNew" class="tab-view active">
+            <div class="app-header">
+              <button type="button" class="icon-btn" aria-label="Menu"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h14M4 12h14M4 18h14"/></svg></button>
+              <div class="logo-text"><span class="logo-icon"></span>carwale</div>
+              <div class="header-actions">
+                <button type="button" class="icon-btn rel" aria-label="Location"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.3 7-12a7 7 0 10-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><span class="dot-badge"></span></button>
+                <button type="button" class="icon-btn" aria-label="Favorites"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-7-10a5 5 0 019.5-2.5A5 5 0 0120 11c0 5.65-8 10-8 10z"/></svg></button>
+              </div>
+            </div>
+            <div class="scroll-area with-bottom-nav">
+              <button type="button" class="search-pill" id="openSearchFromHome"><span>Search for your car e.g. Creta</span><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l5 5"/></svg></button>
+              <div class="section-label">Find The Right Car By</div>
+              <div class="filter-row">
+                <div class="filter-pill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Budget</div>
+                <div class="filter-pill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17h14v2H5v-2zm2-5h10v2H7v-2zm3-5h4v2h-4V7z"/></svg>Body Type</div>
+                <div class="filter-pill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Fuel Type</div>
+              </div>
+              <div class="promo-banner">
+                <img src="https://images.unsplash.com/photo-1533473358331-0135ef3b15aa?w=800&q=80" alt="Promo" />
+                <div class="promo-overlay">
+                  <div class="promo-title">THE NEW <strong>BASALT</strong> SUV COUPE</div>
+                  <span class="promo-tag">STARTS AT ₹ 8.55 LAKH*</span>
+                  <div class="promo-bottom">
+                    <div class="promo-small">BENEFITS UP TO ₹ 1.15 LAKH* · 0%* DOWN PAYMENT. 100%* ON-ROAD FUNDING.</div>
+                    <button type="button" class="btn-coral">GET OFFERS</button>
+                  </div>
+                </div>
+              </div>
+              <div class="section-label" style="color:#fff;font-weight:600">Recently Viewed Cars</div>
+              <div class="h-scroll" id="homeRecentCars"></div>
+            </div>
+          </div>
+          <div id="tabUsed" class="tab-view">
+            <div class="app-header">
+              <button type="button" class="icon-btn" aria-label="Menu"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h14M4 12h14M4 18h14"/></svg></button>
+              <div class="logo-icon" style="margin:0 auto" aria-hidden="true"></div>
+              <button type="button" class="icon-btn rel" aria-label="Location"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.3 7-12a7 7 0 10-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><span class="dot-badge"></span></button>
+            </div>
+            <div class="scroll-area with-bottom-nav">
+              <img class="hero-used" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80" alt="Family in car" />
+              <div class="used-panel">
+                <div class="used-title">FIND THE RIGHT USED CAR</div>
+                <div class="budget-label">Choose your Budget</div>
+                <div class="dual-slider-wrap">
+                  <div class="range-pair" id="rangePair">
+                    <div class="range-track"></div>
+                    <div class="range-fill" id="rangeFill"></div>
+                    <input type="range" id="rangeMin" min="0" max="20" value="0" step="1" />
+                    <input type="range" id="rangeMax" min="0" max="20" value="20" step="1" />
+                  </div>
+                  <div class="dual-slider-labels"><span>Any</span><span>20+ Lakh</span></div>
+                </div>
+                <div class="lakh-inputs">
+                  <input type="text" id="minLakh" value="0 Lakh" readonly />
+                  <span>—</span>
+                  <input type="text" id="maxLakh" value="20+ Lakh" readonly />
+                </div>
+                <button type="button" class="btn-full-coral">Find Used Car</button>
+              </div>
+              <div class="section-label" style="padding-top:20px;color:#fff;font-weight:600">Used Cars By City</div>
+              <div class="city-scroll" id="cityScroll"></div>
+            </div>
+          </div>
+          <div id="tabCompare" class="tab-view">
+            <div class="app-header center-title">
+              <button type="button" class="icon-btn" aria-label="Menu"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h14M4 12h14M4 18h14"/></svg></button>
+              <span class="header-title">Compare Cars</span>
+              <div class="header-actions">
+                <button type="button" class="icon-btn" aria-label="Search"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg></button>
+                <button type="button" class="icon-btn" aria-label="Saved"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></button>
+              </div>
+            </div>
+            <div class="scroll-area with-bottom-nav">
+              <div class="compare-select">
+                <span class="vs-badge">VS</span>
+                <div class="compare-box"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.2"><path d="M5 17l2-8h10l2 8M7 17h10v2H7v-2z"/></svg><span class="select-link">Select Car</span></div>
+                <div class="compare-box"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.2"><path d="M5 17l2-8h10l2 8M7 17h10v2H7v-2z"/></svg><span class="select-link">Select Car</span></div>
+              </div>
+              <div class="compare-actions">
+                <button type="button" class="btn-outline">+ Add Car</button>
+                <button type="button" class="btn-full-coral" style="margin:0;flex:1.2">Compare</button>
+              </div>
+              <div class="section-title-compare">POPULAR CAR COMPARISONS</div>
+              <div id="popularCompare"></div>
+            </div>
+          </div>
+          <div id="tabNews" class="tab-view">
+            <div class="app-header center-title">
+              <button type="button" class="icon-btn" aria-label="Menu"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h14M4 12h14M4 18h14"/></svg></button>
+              <span class="header-title">News</span>
+              <div class="header-actions">
+                <button type="button" class="icon-btn" aria-label="Search"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg></button>
+                <button type="button" class="icon-btn" aria-label="Favorites"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-7-10a5 5 0 019.5-2.5A5 5 0 0120 11c0 5.65-8 10-8 10z"/></svg></button>
+              </div>
+            </div>
+            <div class="news-tabs">
+              <button type="button" class="news-tab active" data-ntab="reviews">NEWS &amp; REVIEWS</button>
+              <button type="button" class="news-tab" data-ntab="media">IMAGES &amp; VIDEOS</button>
+            </div>
+            <div class="chip-row" id="newsChips">
+              <button type="button" class="chip active" data-filter="all">All</button>
+              <button type="button" class="chip" data-filter="reviews">Reviews</button>
+              <button type="button" class="chip" data-filter="reports">Special Reports</button>
+            </div>
+            <div class="scroll-area with-bottom-nav" id="newsFeed"></div>
+          </div>
+          <div id="tabAlerts" class="tab-view">
+            <div class="app-header center-title">
+              <button type="button" class="icon-btn" aria-label="Menu"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h14M4 12h14M4 18h14"/></svg></button>
+              <span class="header-title">Notifications</span>
+              <button type="button" class="link-clear" id="clearNotif">Clear All</button>
+            </div>
+            <div class="scroll-area with-bottom-nav" id="notifList"></div>
+          </div>
+          <nav class="bottom-nav" id="bottomNav" aria-label="Main">
+            <button type="button" class="nav-item active" data-tab="new"><span class="nav-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v4H7V7zm0 6h10v4H7v-4z"/></svg></span>New</button>
+            <button type="button" class="nav-item" data-tab="used"><span class="nav-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M21 21l-4-4"/><path d="M8 14h6M11 11v6"/></svg></span>Used</button>
+            <button type="button" class="nav-item" data-tab="compare"><span class="nav-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></span>Compare</button>
+            <button type="button" class="nav-item" data-tab="news"><span class="nav-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4V4zm4 4h8M4 12h16"/></svg></span>News</button>
+            <button type="button" class="nav-item nav-dot" data-tab="alerts"><span class="nav-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7M13.73 21a2 2 0 01-3.46 0"/></svg></span>Alerts</button>
+          </nav>
+          <div id="searchOverlay" class="overlay-full" aria-hidden="true">
+            <div class="search-top">
+              <button type="button" class="icon-btn" id="searchBack" aria-label="Back"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+              <div class="search-input-wrap" id="searchWrap">
+                <input type="search" id="searchInput" placeholder="" autocomplete="off" />
+                <button type="button" class="icon-btn" id="searchClear" style="display:none" aria-label="Clear"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                <button type="button" class="icon-btn" id="searchMag" aria-label="Search"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l5 5"/></svg></button>
+              </div>
+            </div>
+            <div class="scroll-area" id="searchEmptyState">
+              <div class="subheading">Recently Viewed</div>
+              <div id="searchRecentList"></div>
+              <div class="section-label" style="color:#fff;font-weight:600;padding-top:16px">Recommended For You</div>
+              <div class="h-scroll" id="searchRecommended"></div>
+              <div class="disclaimer">All prices shown above are On-Road Prices in Hyderabad.</div>
+              <div class="subheading">Trending</div>
+              <div id="searchTrending"></div>
+            </div>
+            <div class="scroll-area" id="searchResultsState" style="display:none">
+              <div class="subheading">Search Results</div>
+              <div id="searchResultsList"></div>
+            </div>
+          </div>
+          <div id="detailOverlay" class="overlay-full" aria-hidden="true">
+            <div class="app-header" style="border-bottom:1px solid var(--border)">
+              <button type="button" class="icon-btn" id="detailBack" aria-label="Back"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+              <div class="logo-text" style="font-size:16px"><span class="logo-icon"></span>carwale</div>
+              <div class="header-actions">
+                <button type="button" class="icon-btn" aria-label="Search"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="5"/><path d="M12 12l4 4"/></svg></button>
+                <button type="button" class="icon-btn" aria-label="Favorite"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-6-3.5-6-8a4 4 0 017.5-2 4 4 0 017.5 2c0 4.5-6 8-6 8z"/></svg></button>
+                <button type="button" class="icon-btn" aria-label="Share"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 11l4-4M17 11l-4-4"/></svg></button>
+              </div>
+            </div>
+            <div class="detail-tabs">
+              <button type="button" class="detail-tab active">OVERVIEW</button>
+              <button type="button" class="detail-tab">OFFERS</button>
+              <button type="button" class="detail-tab">KEY SPECS</button>
+              <button type="button" class="detail-tab">VERSIONS</button>
+            </div>
+            <div class="scroll-area" style="flex:1;position:relative;padding-bottom:88px" id="detailScroll">
+              <div class="carousel-wrap">
+                <img id="detailCarouselImg" src="" alt="" />
+                <button type="button" class="car-nav prev" id="carPrev" aria-label="Previous">&#8249;</button>
+                <button type="button" class="car-nav next" id="carNext" aria-label="Next">&#8250;</button>
+              </div>
+              <div class="media-row">
+                <button type="button"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3a9 9 0 100 18 9 9 0 000-18z"/></svg>Colors</button>
+                <button type="button"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="6" width="16" height="12" rx="2"/></svg>Images</button>
+                <button type="button"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 5v14l11-7-11-7z"/></svg>Videos</button>
+              </div>
+              <div class="detail-body">
+                <h1 class="detail-title" id="detailName"></h1>
+                <div class="stars" id="detailStars">★★★★★</div>
+                <div class="review-links"><a href="#">32 Reviews</a> &nbsp;|&nbsp; Write Review</div>
+                <div class="selector-grid">
+                  <div><div class="lbl">Version</div><div class="val"><span id="detailVersion"></span><span>›</span></div></div>
+                  <div><div class="lbl">City</div><div class="val"><span id="detailCity"></span><span>›</span></div></div>
+                </div>
+                <div class="price-big" id="detailPrice"></div>
+                <div><a href="#" style="color:var(--teal);font-size:14px">View Price Breakup</a></div>
+                <div class="price-sub" id="detailOnRoad"></div>
+                <div class="emi-box">
+                  <div class="emi-amt" id="detailEmi">EMI ₹ 4,07,520/month <span style="opacity:.6">ⓘ</span></div>
+                  <a href="#" style="color:var(--teal);font-size:13px;width:100%">EMI Calculator</a>
+                  <button type="button" class="btn-emi">Get EMI Offers</button>
+                </div>
+              </div>
+            </div>
+            <div class="detail-footer"><button type="button" class="btn-full-coral" id="detailCta">Get April Offers</button></div>
+          </div>
+        </div>
+        <div class="home-indicator" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+(function () {
+  const cars = [
+    { id: 'ritz', brand: 'Maruti Suzuki', name: 'Ritz', fullName: 'Maruti Suzuki Ritz', priceDisplay: 'Rs. 4.50 Lakh onwards', priceRange: 'Rs. 4.20 - 6.10 Lakh', onRoad: 'On-Road Price, Hyderabad', emi: 'EMI ₹ 9,820/month', version: 'VXi Petrol Manual', city: 'Silpa Gram Craft Village, Hyderabad', images: ['https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80'], body: 'hatch', fuel: 'petrol', status: '' },
+    { id: 'fronx', brand: 'Maruti Suzuki', name: 'Fronx', fullName: 'Maruti Suzuki Fronx', priceDisplay: 'Rs. 7.50 Lakh onwards', priceRange: 'Rs. 7.50 - 12.50 Lakh', onRoad: 'On-Road Price, Hyderabad', emi: 'EMI ₹ 15,200/month', version: 'Delta Turbo AT', city: 'Silpa Gram Craft Village, Hyderabad', images: ['https://images.unsplash.com/photo-1619405399517-d7fce0f13340?w=600&q=80'], body: 'suv', fuel: 'petrol', status: '' },
+    { id: 'celerio', brand: 'Maruti Suzuki', name: 'Celerio', fullName: 'Maruti Suzuki Celerio', priceDisplay: 'Rs. 5.60 - 8.05 Lakh', priceRange: 'Rs. 5.60 - 8.05 Lakh', onRoad: 'On-Road Price, Hyderabad', emi: 'EMI ₹ 11,000/month', version: 'ZXI AMT', city: 'Hyderabad', images: ['https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600&q=80'], body: 'hatch', fuel: 'petrol', status: '' },
+    { id: 'baleno', brand: 'Maruti Suzuki', name: 'Baleno', fullName: 'Maruti Suzuki Baleno', priceDisplay: 'Rs. 6.61 Lakh onwards', priceRange: 'Rs. 6.61 - 9.88 Lakh', onRoad: 'On-Road Price, Hyderabad', emi: 'EMI ₹ 13,400/month', version: 'Alpha CVT', city: 'Hyderabad', images: ['https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&q=80'], body: 'hatch', fuel: 'petrol', status: '' },
+    { id: 'punch', brand: 'Tata', name: 'Punch', fullName: 'Tata Punch', priceDisplay: 'Rs. 6.73 Lakh onwards', priceRange: 'Rs. 6.73 - 10.48 Lakh', onRoad: 'On-Road Price, Hyderabad', emi: 'EMI ₹ 12,100/month', version: 'Creative AMT', city: 'Hyderabad', images: ['https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&q=80'], body: 'suv', fuel: 'petrol', status: '' },
+    { id: 'sierra', brand: 'Tata', name: 'Sierra', fullName: 'Tata Sierra', priceDisplay: 'Rs. 18 Lakh onwards', priceRange: 'Rs. 18 - 25 Lakh', onRoad: 'On-Road Price, Hyderabad', emi: 'EMI ₹ 35,000/month', version: 'EV Concept', city: 'Hyderabad', images: ['https://images.unsplash.com/photo-1617788138017-80ad40651399?w=600&q=80'], body: 'suv', fuel: 'ev', status: 'coming' },
+    { id: 'seltos', brand: 'Kia', name: 'Seltos', fullName: 'Kia Seltos', priceDisplay: 'Rs. 10.90 Lakh onwards', priceRange: 'Rs. 10.90 - 19.50 Lakh', onRoad: 'On-Road Price, Hyderabad', emi: 'EMI ₹ 22,000/month', version: 'HTX Diesel AT', city: 'Hyderabad', images: ['https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80'], body: 'suv', fuel: 'diesel', status: '' },
+    { id: 'hyryder', brand: 'Toyota', name: 'Urban Cruiser Hyryder', fullName: 'Toyota Urban Cruiser Hyryder', priceDisplay: 'Rs. 11.20 Lakh onwards', priceRange: 'Rs. 11.20 - 20.00 Lakh', onRoad: 'On-Road Price, Hyderabad', emi: 'EMI ₹ 23,500/month', version: 'V Hybrid', city: 'Hyderabad', images: ['https://images.unsplash.com/photo-1533473358331-0135ef3b15aa?w=600&q=80'], body: 'suv', fuel: 'hybrid', status: '' },
+    { id: 'creta', brand: 'Hyundai', name: 'Creta', fullName: 'Hyundai Creta', priceDisplay: 'Rs. 11 Lakh onwards', priceRange: 'Rs. 11 - 19 Lakh', onRoad: 'On-Road Price, Hyderabad', emi: 'EMI ₹ 21,000/month', version: 'SX(O) Diesel AT', city: 'Hyderabad', images: ['https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&q=80'], body: 'suv', fuel: 'diesel', status: '' },
+    { id: 'landcruiser', brand: 'Toyota', name: 'Land Cruiser', fullName: 'Toyota Land Cruiser', priceDisplay: 'Rs. 2.68 Crore', priceRange: 'Rs. 2.68 Crore', onRoad: 'On-Road Price, Hyderabad', emi: 'EMI ₹ 4,07,520/month', version: 'ZX Diesel 3.3L Turbo Automatic', city: 'Silpa Gram Craft Village, Hyderabad', images: ['https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80','https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80'], body: 'suv', fuel: 'diesel', status: '' },
+    { id: 'landcruiser-fj', brand: 'Toyota', name: 'New Land Cruiser FJ', fullName: 'Toyota New Land Cruiser FJ', priceDisplay: '—', priceRange: 'Expected soon', onRoad: 'On-Road Price, Hyderabad', emi: '—', version: 'TBA', city: 'Hyderabad', images: ['https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80'], body: 'suv', fuel: 'petrol', status: 'coming' },
+    { id: 'landcruiser-old', brand: 'Toyota', name: 'Land Cruiser [2015-2020]', fullName: 'Toyota Land Cruiser [2015-2020]', priceDisplay: 'Discontinued', priceRange: '—', onRoad: '—', emi: '—', version: 'VX Diesel', city: 'Hyderabad', images: ['https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&q=80'], body: 'suv', fuel: 'diesel', status: 'discontinued' },
+    { id: 'prado', brand: 'Toyota', name: 'Land Cruiser Prado', fullName: 'Toyota Land Cruiser Prado', priceDisplay: 'Discontinued', priceRange: '—', onRoad: '—', emi: '—', version: 'TX', city: 'Hyderabad', images: ['https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80'], body: 'suv', fuel: 'diesel', status: 'discontinued' },
+    { id: 'exter', brand: 'Hyundai', name: 'Exter', fullName: 'Hyundai Exter', priceDisplay: 'Rs. 6.13 Lakh onwards', priceRange: 'Rs. 6.13 - 10.15 Lakh', onRoad: 'On-Road Price, Hyderabad', emi: 'EMI ₹ 11,500/month', version: 'SX AMT', city: 'Hyderabad', images: ['https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80'], body: 'suv', fuel: 'petrol', status: '' }
+  ];
+
+  const searchExtras = [
+    { type: 'compare', label: 'Toyota Land Cruiser vs Lexus LX' },
+    { type: 'compare', label: 'Toyota Land Cruiser vs Land Rover Defender' },
+    { type: 'compare', label: 'Toyota Land Cruiser vs Audi RS Q8 Performance' }
+  ];
+
+  const news = [
+    { id: 1, title: 'Tata Sierra EV to be Launched in India Next Month', author: 'By Aditya Nadkarni', time: '59 minutes ago', views: '384 views', img: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&q=80', cat: 'all' },
+    { id: 2, title: 'Hyundai Creta Facelift: What to Expect in 2025', author: 'By Team CW', time: '3 hours ago', views: '1.2k views', img: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&q=80', cat: 'reviews' },
+    { id: 3, title: 'Budget EVs Under ₹15 Lakh: Special Report', author: 'By CW Research', time: '1 day ago', views: '892 views', img: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&q=80', cat: 'reports' },
+    { id: 4, title: 'Maruti Suzuki Fronx Long Term Review', author: 'By Road Test', time: '2 days ago', views: '2.1k views', img: 'https://images.unsplash.com/photo-1619405399517-d7fce0f13340?w=800&q=80', cat: 'reviews' },
+    { id: 5, title: 'Upcoming SUVs: April 2025 Round-up', author: 'By CW News', time: '4 days ago', views: '3.4k views', img: 'https://images.unsplash.com/photo-1533473358331-0135ef3b15aa?w=800&q=80', cat: 'reports' },
+    { id: 6, title: 'Tata Punch vs Hyundai Exter: Verdict', author: 'By Compare Desk', time: '5 days ago', views: '5.6k views', img: 'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800&q=80', cat: 'reviews' }
+  ];
+
+  const comparisons = [
+    { a: cars.find(c => c.id === 'punch'), b: cars.find(c => c.id === 'exter') },
+    { a: cars.find(c => c.id === 'sierra'), b: cars.find(c => c.id === 'seltos') }
+  ];
+
+  const notifications = [
+    { title: "TEASED: Vinfast's Mahindra XEV 9S Rival F...", time: '19 Minutes ago', img: 'https://images.unsplash.com/photo-1619405399517-d7fce0f13340?w=400&q=80' },
+    { title: 'Skoda Exits China - What Does it Mean for India?', time: '4 Hours ago', img: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&q=80' },
+    { title: "MG's New Mahindra XUV 7XO Rival Patented in In...", time: '16 Hours ago', img: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&q=80' },
+    { title: 'April 2025: Best Car Deals in Hyderabad', time: '1 Day ago', img: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=80' },
+    { title: 'Toyota Land Cruiser: Full price breakup explained', time: '2 Days ago', img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=400&q=80' }
+  ];
+
+  const cities = [
+    { name: 'Mumbai', icon: 'M' },
+    { name: 'Delhi', icon: 'D' },
+    { name: 'Hyderabad', icon: 'H' },
+    { name: 'Bangalore', icon: 'B' },
+    { name: 'Chennai', icon: 'C' }
+  ];
+
+  const trending = ['Tata Punch', 'Tata Sierra', 'Kia Seltos', 'Toyota Urban Cruiser Hyryder', 'Hyundai Creta'];
+  const recentIds = ['ritz', 'fronx'];
+
+  function $(sel) { return document.querySelector(sel); }
+  function $all(sel) { return document.querySelectorAll(sel); }
+
+  function renderHomeRecent() {
+    const el = $('#homeRecentCars');
+    el.innerHTML = recentIds.map(id => {
+      const c = cars.find(x => x.id === id);
+      return `<div class="car-card-mini" data-car="${c.id}"><div class="img-wrap"><img src="${c.images[0]}" alt=""></div><div class="meta"><div class="brand">${c.brand}</div><div class="model">${c.name}</div></div></div>`;
+    }).join('');
+    el.querySelectorAll('[data-car]').forEach(n => n.addEventListener('click', () => openDetail(n.dataset.car)));
+  }
+
+  function renderCities() {
+    $('#cityScroll').innerHTML = cities.map(ct => `
+      <div class="city-card" title="${ct.name}"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2L4 7v15h16V7l-8-5z"/><text x="12" y="15" text-anchor="middle" fill="currentColor" font-size="10" font-weight="700">${ct.icon}</text></svg></div>`).join('');
+  }
+
+  function renderPopularCompare() {
+    $('#popularCompare').innerHTML = comparisons.map(pair => `
+      <div class="pop-compare-card">
+        <div class="pop-compare-inner">
+          <span class="vs-badge" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">VS</span>
+          <div class="pop-half"><img src="${pair.a.images[0]}" alt=""><div class="nm">${pair.a.brand} ${pair.a.name}</div><div class="pr">${pair.a.priceDisplay}</div></div>
+          <div class="pop-half"><img src="${pair.b.images[0]}" alt=""><div class="nm">${pair.b.brand} ${pair.b.name}</div><div class="pr">${pair.b.priceDisplay}</div></div>
+        </div>
+      </div>`).join('');
+  }
+
+  let newsFilter = 'all';
+  function renderNews() {
+    const feed = $('#newsFeed');
+    const list = news.filter(n => newsFilter === 'all' || n.cat === newsFilter);
+    feed.innerHTML = list.map(article => `
+      <article class="news-card fade-in">
+        <div class="img-box">
+          <img src="${article.img}" alt="">
+          <span class="news-badge">NEWS</span>
+          <button type="button" class="news-heart" aria-label="Save"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-6-3.5-6-8a4 4 0 017.5-2 4 4 0 017.5 2c0 4.5-6 8-6 8z"/></svg></button>
+        </div>
+        <h3>${article.title}</h3>
+        <div class="news-meta"><span>${article.author}</span><span>${article.time}</span></div>
+        <div class="news-views"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>${article.views}</div>
+      </article>`).join('');
+  }
+
+  function renderNotifs() {
+    $('#notifList').innerHTML = notifications.map(n => `
+      <div class="notif-row"><img src="${n.img}" alt=""><div class="tx"><div class="t">${n.title}</div><div class="tm">${n.time}</div></div></div>`).join('');
+  }
+
+  function renderSearchStatic() {
+    const recent = $('#searchRecentList');
+    recent.innerHTML = recentIds.map(id => {
+      const c = cars.find(x => x.id === id);
+      return `<div class="list-row" data-car="${c.id}"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span class="main">${c.fullName}</span></div>`;
+    }).join('');
+    recent.querySelectorAll('[data-car]').forEach(n => n.addEventListener('click', () => openDetail(n.dataset.car)));
+
+    $('#searchRecommended').innerHTML = ['celerio', 'baleno'].map(id => {
+      const c = cars.find(x => x.id === id);
+      return `<div class="rec-card" data-car="${c.id}"><div class="ph"><img src="${c.images[0]}" alt=""></div><div class="txt"><div class="name">${c.fullName}</div><div class="price">${c.priceRange}</div></div></div>`;
+    }).join('');
+    $('#searchRecommended').querySelectorAll('[data-car]').forEach(n => n.addEventListener('click', () => openDetail(n.dataset.car)));
+
+    $('#searchTrending').innerHTML = trending.map(t => `
+      <div class="list-row"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg><span class="main">${t}</span></div>`).join('');
+  }
+
+  function tabSwitch(name) {
+    $all('.tab-view').forEach(t => t.classList.remove('active'));
+    $all('.nav-item').forEach(n => n.classList.remove('active'));
+    const map = { new: 'tabNew', used: 'tabUsed', compare: 'tabCompare', news: 'tabNews', alerts: 'tabAlerts' };
+    const el = $('#' + map[name]);
+    if (el) el.classList.add('active');
+    const nav = document.querySelector(`.nav-item[data-tab="${name}"]`);
+    if (nav) nav.classList.add('active');
+  }
+
+  $all('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => tabSwitch(btn.dataset.tab));
+  });
+
+  $all('.news-tab').forEach(b => {
+    b.addEventListener('click', () => {
+      $all('.news-tab').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      if (b.dataset.ntab === 'media') {
+        $('#newsFeed').innerHTML = '<p style="padding:48px 24px;text-align:center;color:#9e9e9e;line-height:1.6">Images &amp; Videos (demo).<br><br>Switch to <strong style="color:var(--teal)">NEWS &amp; REVIEWS</strong> for articles.</p>';
+      } else {
+        renderNews();
+      }
+    });
+  });
+
+  $all('#newsChips .chip').forEach(ch => {
+    ch.addEventListener('click', () => {
+      $all('#newsChips .chip').forEach(x => x.classList.remove('active'));
+      ch.classList.add('active');
+      newsFilter = ch.dataset.filter;
+      const revTab = document.querySelector('.news-tab[data-ntab="reviews"]');
+      if (revTab && !revTab.classList.contains('active')) {
+        $all('.news-tab').forEach(x => x.classList.remove('active'));
+        revTab.classList.add('active');
+      }
+      renderNews();
+    });
+  });
+
+  $('#clearNotif').addEventListener('click', () => { $('#notifList').innerHTML = '<p style="padding:24px;color:#888;text-align:center">No notifications</p>'; });
+
+  const searchOverlay = $('#searchOverlay');
+  const bottomNav = $('#bottomNav');
+  const searchInput = $('#searchInput');
+  const searchEmpty = $('#searchEmptyState');
+  const searchResults = $('#searchResultsState');
+  const searchClear = $('#searchClear');
+
+  function openSearch() {
+    searchOverlay.classList.add('visible');
+    searchOverlay.setAttribute('aria-hidden', 'false');
+    bottomNav.classList.add('hidden');
+    searchInput.value = '';
+    searchEmpty.style.display = '';
+    searchResults.style.display = 'none';
+    searchClear.style.display = 'none';
+    searchInput.focus();
+  }
+  function closeSearch() {
+    searchOverlay.classList.remove('visible');
+    searchOverlay.setAttribute('aria-hidden', 'true');
+    if (!$('#detailOverlay').classList.contains('visible')) {
+      bottomNav.classList.remove('hidden');
+    }
+  }
+
+  $('#openSearchFromHome').addEventListener('click', openSearch);
+  $('#searchBack').addEventListener('click', closeSearch);
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim();
+    searchClear.style.display = q ? 'flex' : 'none';
+    if (!q) {
+      searchEmpty.style.display = '';
+      searchResults.style.display = 'none';
+      return;
+    }
+    searchEmpty.style.display = 'none';
+    searchResults.style.display = '';
+    runSearch(q);
+  });
+  searchClear.addEventListener('click', () => { searchInput.value = ''; searchClear.style.display = 'none'; searchEmpty.style.display = ''; searchResults.style.display = 'none'; searchInput.focus(); });
+
+  function runSearch(q) {
+    const ql = q.toLowerCase();
+    const qCompact = ql.replace(/\s+/g, '');
+    const list = [];
+    const seen = new Set();
+    cars.forEach(c => {
+      const hay = (c.fullName + ' ' + c.brand + ' ' + c.name).toLowerCase();
+      const hayC = hay.replace(/\s+/g, '');
+      if (hay.includes(ql) || (qCompact.length >= 2 && hayC.includes(qCompact))) {
+        if (!seen.has(c.id)) {
+          seen.add(c.id);
+          list.push({ kind: 'car', car: c });
+        }
+      }
+    });
+    if (ql.includes('land') || ql.includes('cruis')) {
+      searchExtras.forEach(e => list.push({ kind: 'compare', label: e.label }));
+    }
+    const box = $('#searchResultsList');
+    if (!list.length) {
+      box.innerHTML = `<div style="padding:24px;color:#888;text-align:center">No results for "${escapeHtml(q)}"</div>`;
+      return;
+    }
+    box.innerHTML = list.map(item => {
+      if (item.kind === 'compare') {
+        return `<div class="list-row"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l5 5"/></svg><span class="main">${escapeHtml(item.label)}</span></div>`;
+      }
+      const c = item.car;
+      let badge = '';
+      if (c.status === 'coming') badge = '<span class="badge teal">Coming soon</span>';
+      else if (c.status === 'discontinued') badge = '<span class="badge">Discontinued</span>';
+      return `<div class="list-row" data-car="${c.id}"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l5 5"/></svg><span class="main">${escapeHtml(c.fullName)}</span>${badge}</div>`;
+    }).join('');
+    box.querySelectorAll('[data-car]').forEach(n => n.addEventListener('click', () => openDetail(n.dataset.car)));
+  }
+
+  function escapeHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  let detailCarId = null;
+  let carouselIdx = 0;
+  function openDetail(id) {
+    detailCarId = id;
+    const c = cars.find(x => x.id === id);
+    if (!c) return;
+    carouselIdx = 0;
+    $('#detailName').textContent = c.brand + ' ' + c.name;
+    $('#detailVersion').textContent = c.version;
+    $('#detailCity').textContent = c.city;
+    $('#detailPrice').textContent = c.priceDisplay.startsWith('Rs') ? c.priceDisplay : 'Rs. ' + c.priceDisplay;
+    $('#detailOnRoad').textContent = c.onRoad;
+    $('#detailEmi').innerHTML = (c.emi && c.emi !== '—' ? c.emi : 'EMI —') + ' <span style="opacity:.6">ⓘ</span>';
+    $('#detailCarouselImg').src = c.images[0];
+    $('#detailOverlay').classList.add('visible');
+    $('#detailOverlay').setAttribute('aria-hidden', 'false');
+    bottomNav.classList.add('hidden');
+    closeSearch();
+  }
+  function closeDetail() {
+    $('#detailOverlay').classList.remove('visible');
+    $('#detailOverlay').setAttribute('aria-hidden', 'true');
+    bottomNav.classList.remove('hidden');
+  }
+  $('#detailBack').addEventListener('click', closeDetail);
+
+  $('#carPrev').addEventListener('click', () => {
+    const c = cars.find(x => x.id === detailCarId);
+    if (!c || !c.images.length) return;
+    carouselIdx = (carouselIdx - 1 + c.images.length) % c.images.length;
+    $('#detailCarouselImg').src = c.images[carouselIdx];
+  });
+  $('#carNext').addEventListener('click', () => {
+    const c = cars.find(x => x.id === detailCarId);
+    if (!c || !c.images.length) return;
+    carouselIdx = (carouselIdx + 1) % c.images.length;
+    $('#detailCarouselImg').src = c.images[carouselIdx];
+  });
+
+  const rMin = $('#rangeMin');
+  const rMax = $('#rangeMax');
+  const rangeFill = $('#rangeFill');
+  function updateRange() {
+    let min = +rMin.value;
+    let max = +rMax.value;
+    if (min > max) { const t = min; min = max; max = t; }
+    const pct = (v) => (v / 20) * 100;
+    rangeFill.style.left = pct(min) + '%';
+    rangeFill.style.width = (pct(max) - pct(min)) + '%';
+    $('#minLakh').value = min === 0 ? '0 Lakh' : min + ' Lakh';
+    $('#maxLakh').value = max >= 20 ? '20+ Lakh' : max + ' Lakh';
+  }
+  rMin.addEventListener('input', () => {
+    if (+rMin.value > +rMax.value) rMax.value = rMin.value;
+    updateRange();
+  });
+  rMax.addEventListener('input', () => {
+    if (+rMax.value < +rMin.value) rMin.value = rMax.value;
+    updateRange();
+  });
+  updateRange();
+
+  function tickClock() {
+    const d = new Date();
+    $('#clock').textContent = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+  }
+  tickClock();
+  setInterval(tickClock, 30000);
+
+  renderHomeRecent();
+  renderCities();
+  renderPopularCompare();
+  renderNews();
+  renderNotifs();
+  renderSearchStatic();
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if ($('#detailOverlay').classList.contains('visible')) closeDetail();
+    else if (searchOverlay.classList.contains('visible')) closeSearch();
+  });
+})();
+  </script>
+</body>
+</html>

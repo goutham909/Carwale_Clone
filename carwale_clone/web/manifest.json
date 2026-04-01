@@ -1,0 +1,11 @@
+{
+    "name": "carwale_clone",
+    "short_name": "carwale_clone",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#121212",
+    "theme_color": "#121212",
+    "description": "CarWale-style UI clone (mock data).",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false
+}

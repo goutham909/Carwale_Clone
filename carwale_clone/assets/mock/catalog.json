@@ -1,0 +1,276 @@
+{
+  "recentCarIds": ["ritz", "fronx"],
+  "trending": [
+    "Tata Punch",
+    "Tata Sierra",
+    "Kia Seltos",
+    "Toyota Urban Cruiser Hyryder",
+    "Hyundai Creta"
+  ],
+  "searchCompareLabels": [
+    "Toyota Land Cruiser vs Lexus LX",
+    "Toyota Land Cruiser vs Land Rover Defender",
+    "Toyota Land Cruiser vs Audi RS Q8 Performance"
+  ],
+  "cities": ["Mumbai", "Delhi", "Hyderabad", "Bangalore", "Chennai"],
+  "cars": [
+    {
+      "id": "ritz",
+      "brand": "Maruti Suzuki",
+      "name": "Ritz",
+      "fullName": "Maruti Suzuki Ritz",
+      "priceDisplay": "Rs. 4.50 Lakh onwards",
+      "priceRange": "Rs. 4.20 - 6.10 Lakh",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "EMI ₹ 9,820/month",
+      "version": "VXi Petrol Manual",
+      "city": "Silpa Gram Craft Village, Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80"],
+      "status": ""
+    },
+    {
+      "id": "fronx",
+      "brand": "Maruti Suzuki",
+      "name": "Fronx",
+      "fullName": "Maruti Suzuki Fronx",
+      "priceDisplay": "Rs. 7.50 Lakh onwards",
+      "priceRange": "Rs. 7.50 - 12.50 Lakh",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "EMI ₹ 15,200/month",
+      "version": "Delta Turbo AT",
+      "city": "Silpa Gram Craft Village, Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1619405399517-d7fce0f13340?w=600&q=80"],
+      "status": ""
+    },
+    {
+      "id": "celerio",
+      "brand": "Maruti Suzuki",
+      "name": "Celerio",
+      "fullName": "Maruti Suzuki Celerio",
+      "priceDisplay": "Rs. 5.60 - 8.05 Lakh",
+      "priceRange": "Rs. 5.60 - 8.05 Lakh",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "EMI ₹ 11,000/month",
+      "version": "ZXI AMT",
+      "city": "Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600&q=80"],
+      "status": ""
+    },
+    {
+      "id": "baleno",
+      "brand": "Maruti Suzuki",
+      "name": "Baleno",
+      "fullName": "Maruti Suzuki Baleno",
+      "priceDisplay": "Rs. 6.61 Lakh onwards",
+      "priceRange": "Rs. 6.61 - 9.88 Lakh",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "EMI ₹ 13,400/month",
+      "version": "Alpha CVT",
+      "city": "Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&q=80"],
+      "status": ""
+    },
+    {
+      "id": "punch",
+      "brand": "Tata",
+      "name": "Punch",
+      "fullName": "Tata Punch",
+      "priceDisplay": "Rs. 6.73 Lakh onwards",
+      "priceRange": "Rs. 6.73 - 10.48 Lakh",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "EMI ₹ 12,100/month",
+      "version": "Creative AMT",
+      "city": "Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&q=80"],
+      "status": ""
+    },
+    {
+      "id": "sierra",
+      "brand": "Tata",
+      "name": "Sierra",
+      "fullName": "Tata Sierra",
+      "priceDisplay": "Rs. 18 Lakh onwards",
+      "priceRange": "Rs. 18 - 25 Lakh",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "EMI ₹ 35,000/month",
+      "version": "EV Concept",
+      "city": "Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1617788138017-80ad40651399?w=600&q=80"],
+      "status": "coming"
+    },
+    {
+      "id": "seltos",
+      "brand": "Kia",
+      "name": "Seltos",
+      "fullName": "Kia Seltos",
+      "priceDisplay": "Rs. 10.90 Lakh onwards",
+      "priceRange": "Rs. 10.90 - 19.50 Lakh",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "EMI ₹ 22,000/month",
+      "version": "HTX Diesel AT",
+      "city": "Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80"],
+      "status": ""
+    },
+    {
+      "id": "hyryder",
+      "brand": "Toyota",
+      "name": "Urban Cruiser Hyryder",
+      "fullName": "Toyota Urban Cruiser Hyryder",
+      "priceDisplay": "Rs. 11.20 Lakh onwards",
+      "priceRange": "Rs. 11.20 - 20.00 Lakh",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "EMI ₹ 23,500/month",
+      "version": "V Hybrid",
+      "city": "Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1533473358331-0135ef3b15aa?w=600&q=80"],
+      "status": ""
+    },
+    {
+      "id": "creta",
+      "brand": "Hyundai",
+      "name": "Creta",
+      "fullName": "Hyundai Creta",
+      "priceDisplay": "Rs. 11 Lakh onwards",
+      "priceRange": "Rs. 11 - 19 Lakh",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "EMI ₹ 21,000/month",
+      "version": "SX(O) Diesel AT",
+      "city": "Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&q=80"],
+      "status": ""
+    },
+    {
+      "id": "landcruiser",
+      "brand": "Toyota",
+      "name": "Land Cruiser",
+      "fullName": "Toyota Land Cruiser",
+      "priceDisplay": "Rs. 2.68 Crore",
+      "priceRange": "Rs. 2.68 Crore",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "EMI ₹ 4,07,520/month",
+      "version": "ZX Diesel 3.3L Turbo Automatic",
+      "city": "Silpa Gram Craft Village, Hyderabad",
+      "imageUrls": [
+        "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80",
+        "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80"
+      ],
+      "status": ""
+    },
+    {
+      "id": "landcruiser-fj",
+      "brand": "Toyota",
+      "name": "New Land Cruiser FJ",
+      "fullName": "Toyota New Land Cruiser FJ",
+      "priceDisplay": "—",
+      "priceRange": "Expected soon",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "—",
+      "version": "TBA",
+      "city": "Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80"],
+      "status": "coming"
+    },
+    {
+      "id": "landcruiser-old",
+      "brand": "Toyota",
+      "name": "Land Cruiser [2015-2020]",
+      "fullName": "Toyota Land Cruiser [2015-2020]",
+      "priceDisplay": "Discontinued",
+      "priceRange": "—",
+      "onRoad": "—",
+      "emi": "—",
+      "version": "VX Diesel",
+      "city": "Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&q=80"],
+      "status": "discontinued"
+    },
+    {
+      "id": "prado",
+      "brand": "Toyota",
+      "name": "Land Cruiser Prado",
+      "fullName": "Toyota Land Cruiser Prado",
+      "priceDisplay": "Discontinued",
+      "priceRange": "—",
+      "onRoad": "—",
+      "emi": "—",
+      "version": "TX",
+      "city": "Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80"],
+      "status": "discontinued"
+    },
+    {
+      "id": "exter",
+      "brand": "Hyundai",
+      "name": "Exter",
+      "fullName": "Hyundai Exter",
+      "priceDisplay": "Rs. 6.13 Lakh onwards",
+      "priceRange": "Rs. 6.13 - 10.15 Lakh",
+      "onRoad": "On-Road Price, Hyderabad",
+      "emi": "EMI ₹ 11,500/month",
+      "version": "SX AMT",
+      "city": "Hyderabad",
+      "imageUrls": ["https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80"],
+      "status": ""
+    }
+  ],
+  "news": [
+    {
+      "id": "n1",
+      "title": "Tata Sierra EV to be Launched in India Next Month",
+      "author": "By Aditya Nadkarni",
+      "time": "59 minutes ago",
+      "views": "384 views",
+      "imageUrl": "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&q=80",
+      "category": "all"
+    },
+    {
+      "id": "n2",
+      "title": "Hyundai Creta Facelift: What to Expect in 2025",
+      "author": "By Team CW",
+      "time": "3 hours ago",
+      "views": "1.2k views",
+      "imageUrl": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&q=80",
+      "category": "reviews"
+    },
+    {
+      "id": "n3",
+      "title": "Budget EVs Under ₹15 Lakh: Special Report",
+      "author": "By CW Research",
+      "time": "1 day ago",
+      "views": "892 views",
+      "imageUrl": "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&q=80",
+      "category": "reports"
+    },
+    {
+      "id": "n4",
+      "title": "Maruti Suzuki Fronx Long Term Review",
+      "author": "By Road Test",
+      "time": "2 days ago",
+      "views": "2.1k views",
+      "imageUrl": "https://images.unsplash.com/photo-1619405399517-d7fce0f13340?w=800&q=80",
+      "category": "reviews"
+    }
+  ],
+  "notifications": [
+    {
+      "title": "TEASED: Vinfast's Mahindra XEV 9S Rival F...",
+      "time": "19 Minutes ago",
+      "imageUrl": "https://images.unsplash.com/photo-1619405399517-d7fce0f13340?w=400&q=80"
+    },
+    {
+      "title": "Skoda Exits China - What Does it Mean for India?",
+      "time": "4 Hours ago",
+      "imageUrl": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&q=80"
+    },
+    {
+      "title": "MG's New Mahindra XUV 7XO Rival Patented in In...",
+      "time": "16 Hours ago",
+      "imageUrl": "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&q=80"
+    }
+  ],
+  "comparisons": [
+    { "leftId": "punch", "rightId": "exter" },
+    { "leftId": "sierra", "rightId": "seltos" }
+  ]
+}
